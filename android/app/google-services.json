@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1009800735735",
+    "firebase_url": "https://castro-21968.firebaseio.com",
+    "project_id": "castro-21968",
+    "storage_bucket": "castro-21968.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009800735735:android:974e28514fb51be550dcf2",
+        "android_client_info": {
+          "package_name": "com.example.castro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1009800735735-de1k5irfqts25kg4arq5dkggcco48tlu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxRwEZN4AjncCq1rrPM3IVu8VQFCvNP6c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1009800735735-de1k5irfqts25kg4arq5dkggcco48tlu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
