@@ -1,10 +1,12 @@
 import 'dart:ui';
 import 'package:castro/Logic/useraccountlogic.dart';
+import 'package:castro/Logic/validator/basicvalidation.dart';
 import 'package:castro/uiblocks/BasicPage.dart';
-import 'package:firebase_auth_ui/providers.dart';
+import 'package:castro/uiblocks/BasicText.dart';
+import 'package:castro/uiblocks/loginDialog.dart';
+import 'package:castro/uiblocks/shopLoginDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import "package:firebase_auth_ui/firebase_auth_ui.dart" as auth;
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -15,14 +17,26 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   TextEditingController _emailcontroller;
+  TextEditingController _nameController;
   TextEditingController _passwordcontroller;
+  bool autovalidate = false;
   @override
   void initState() {
     super.initState();
     //auth.FirebaseAuthUi.instance().launchAuth([AuthProvider.email()]);
-    _emailcontroller = TextEditingController();
-    _passwordcontroller =
-        TextEditingController();
+    _emailcontroller =
+        TextEditingController(); //initializing here prevents reinintialization due to statechanges
+    _passwordcontroller = TextEditingController();
+    _nameController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    // frees resources
+    _emailcontroller.dispose();
+    _passwordcontroller.dispose();
+    _nameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -61,11 +75,58 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: RaisedButton.icon(
-                            onPressed: () async{
-                              await auth.FirebaseAuthUi.instance()
-                                  .launchAuth([AuthProvider.email()]);
-                              UserAccount.signIn("user");
-                              Navigator.of(context).pushNamed("/user");
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                child: Center(
+                                  child: SingleChildScrollView(
+                                    child: RegisterDialog(
+                                      onCancel: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      height: MediaQuery.of(context).size.height,
+                                      nameController: _nameController,
+                                      passwordController: _passwordcontroller,
+                                      emailController: _emailcontroller,
+                                      autovalidate: autovalidate,
+                                      onRegister: () {
+                                        if (_emailcontroller.text.isNotEmpty &&
+                                            _nameController.text.isNotEmpty) {
+                                          if (_passwordcontroller
+                                                  .text.isNotEmpty &&
+                                              _passwordcontroller.text.length >=
+                                                  6) {
+                                            //Simple try catch to prevent errors, by letting the user edit his input
+                                            UserAccount.signIn(
+                                                "user",
+                                                _nameController.text,
+                                                _emailcontroller.text,
+                                                _passwordcontroller.text);
+                                            Navigator.of(context)
+                                                .pushNamed("/user");
+                                          } else {
+                                            setState(() {
+                                              autovalidate = true;
+                                              _passwordcontroller
+                                                  .clear(); //So the user has to add the data againe to prevent mistakes
+                                              _emailcontroller.clear();
+                                              _nameController.clear();
+                                            });
+                                          }
+                                        } else {
+                                          setState(() {
+                                            autovalidate = true;
+                                            _passwordcontroller
+                                                .clear(); //So the user has to add the data againe to prevent mistakes
+                                            _emailcontroller.clear();
+                                            _nameController.clear();
+                                          });
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              );
                             },
                             icon: Icon(Icons.person),
                             label: Text("Kunde"),
@@ -74,7 +135,21 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: RaisedButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                child: Center(
+                                  child: SingleChildScrollView(
+                                    child: ShopRegisterDialog(
+                                        PageController(),
+                                        TextEditingController(),
+                                        TextEditingController(),
+                                        TextEditingController(),
+                                        false,
+                                        MediaQuery.of(context).size.height),
+                                  ),
+                                ));
+                          },
                           icon: FaIcon(FontAwesomeIcons.store),
                           label: Text("Resturant"),
                           color: Colors.orange,

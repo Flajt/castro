@@ -14,8 +14,7 @@ class EditAccoutPage extends StatefulWidget {
 }
 
 class _EditAccoutPageState extends State<EditAccoutPage> {
-  TextEditingController
-      usernameController; // way to access the new username / stores text inputs
+  TextEditingController usernameController; // way to access the new username / stores text inputs
   TextEditingController emailController;
   TextEditingController phoneController;
   TextEditingController addressController;

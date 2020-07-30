@@ -17,7 +17,7 @@ class UserDrawerStorage extends StatelessWidget {
           Divider(color: Colors.black38),
           ListTile(leading:Icon(Icons.exit_to_app),onTap: (){
             signout();
-            Navigator.of(context).popAndPushNamed("/");
+            Navigator.of(context).popAndPushNamed("/login");
           },title: Text("Logout"),),
         ],
       ),
