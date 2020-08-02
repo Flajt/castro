@@ -27,9 +27,8 @@ dependencies:
     sdk: flutter
   provider: ^4.3.1
   font_awesome_flutter: ^8.8.1
-  #qr_flutter: ^3.1.0
-  #barcode_scan: ^3.0.1
-  #qrscan: ^0.2.17 #issue
+  qr_flutter: ^3.1.0 #creats QR-Codes
+  barcode_scan: ^3.0.1 #scans QR-Codes
   path_provider: ^1.6.9
   pdf: ^1.6.1
   firebase_core: ^0.4.5

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_ui/providers.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,30 +21,30 @@ class UserAccount {
   }
 
   ///Signs the user in
-  static signIn(String userType, String username, String email, String passwort) async {
+  static signIn(
+      String userType, String username, String email, String passwort) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.get("email") == null) {
-      AuthResult result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: email, password: passwort);
+    if (prefs.get("name") == null) {
+      AuthResult result = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: passwort);
       FirebaseUser currentUser = result.user;
       UserUpdateInfo info = UserUpdateInfo();
       info.displayName = username;
       await currentUser.updateProfile(info);
 
       ///Saves the email
-      prefs.setString("email", "${currentUser.email}");
+      await prefs.setString("email", "${currentUser.email}");
 
       ///display name
-      prefs.setString("name", "$username");
+      await prefs.setString("name", "$username");
 
       ///and type of user
-      prefs.setString("type", userType);
+      await prefs.setString("type", userType);
     }
   }
 
   ///Returns a Firebase User
-  static getUserCreds() async {
-    //TODO: Check if 2 methods are needed. 1 for customer and 1 for shop?
+  static Future getUserCreds() async {
     //FirebaseUser user = await FirebaseAuth.instance.currentUser();
     try {
       FirebaseUser user = await FirebaseAuth.instance.currentUser();
@@ -53,7 +54,8 @@ class UserAccount {
         "email": user.email,
         "user": user
       }; //returns userdata as map incl. FirebaseUser Oject for futher use
-    } catch (e) { //fail save 
+    } catch (e) {
+      //fail save
       SharedPreferences prefs = await SharedPreferences.getInstance();
       return {
         "name": prefs.get("name"),
@@ -79,26 +81,28 @@ class UserAccount {
   static Future getUserData() async {
     String address;
     FirebaseDatabase dbinstance = FirebaseDatabase.instance;
-    Map<String, dynamic> data = getUserCreds(); //cals get user creds
+    Map<String, dynamic> data = await getUserCreds(); //cals get user creds
     FirebaseUser user = data["user"];
     String uid = user.uid; // get user unique identifier
-    DatabaseReference db =
-        dbinstance.reference().child("/users/$uid"); //creates db reference
+    DatabaseReference db = dbinstance.reference().child("/users/$uid"); //creates db reference
     DataSnapshot ret = await db.once(); // get's the db's data
     Map values = ret.value; // converts it into native values -> Map
-
-    if (values.containsKey(uid) == true) {
-      //trys to fetch users uid
-      address = values[uid]["address"];
-    } else {
-      address = "";
-    }
-    if (user != null) {
-      data["phone"] = user.phoneNumber; //adds users phone number and adress
-      data["address"] = address;
-      return data;
-    } else {
-      return null;
+    if (values.isNotEmpty) {
+      if (values.containsKey(uid) == true) {
+        //trys to fetch users uid
+        address = values[uid]["address"];
+      } else {
+        address = "";
+      }
+      } else{
+        address ="";
+      }
+      if (user != null) {
+        data["phone"] = user.phoneNumber; //adds users phone number and adress
+        data["address"] = address;
+        return data;
+      } else {
+        return null;
     }
   }
 
@@ -116,6 +120,17 @@ class UserAccount {
   }
 
   static updatePhoneNumber(FirebaseUser currentUser, String phonenumber) async {
-    await currentUser.updatePhoneNumberCredential(null);
+    //Workaround, idealy the phone number would be added via   currentUser.updatePhoneNumberCredential(credential) method, which would require
+    bool completed;
+    await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: phonenumber,
+        timeout: Duration(minutes: 5),
+        verificationCompleted: (credital) =>
+            currentUser.updatePhoneNumberCredential(credital),
+        verificationFailed: (exeception) => completed = false,
+        codeSent: null,
+        codeAutoRetrievalTimeout: null);
+
+    return completed;
   }
 }

@@ -153,6 +153,7 @@ class _EditAccoutPageState extends State<EditAccoutPage> {
                     showDialog(
                         context: context,
                         child: AccountDialog(
+                            prefix: Text("+"),
                             title: "Edit phone number",
                             controller: phoneController,
                             validator: ValidationOptions.isNotEmpty,
@@ -161,7 +162,9 @@ class _EditAccoutPageState extends State<EditAccoutPage> {
                             autovalidate: autovalidate,
                             context: context,
                             onSubmitted: (){
-                              
+                              if(phoneController.text.isNotEmpty){
+                              UserAccount.updatePhoneNumber(data["user"], phoneController.text);
+                              }
                             }));
                   },
                 ),

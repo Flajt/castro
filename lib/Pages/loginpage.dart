@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:castro/Logic/shopAccountLogic.dart';
 import 'package:castro/Logic/useraccountlogic.dart';
 import 'package:castro/Logic/validator/basicvalidation.dart';
 import 'package:castro/uiblocks/BasicPage.dart';
@@ -19,15 +20,17 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _emailcontroller;
   TextEditingController _nameController;
   TextEditingController _passwordcontroller;
-  bool autovalidate = false;
+  bool autovalidate;
+  final userFormKey = GlobalKey<FormState>();
+  final shopFormKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
     //auth.FirebaseAuthUi.instance().launchAuth([AuthProvider.email()]);
-    _emailcontroller =
-        TextEditingController(); //initializing here prevents reinintialization due to statechanges
+    _emailcontroller = TextEditingController(); //initializing here prevents reinintialization due to statechanges
     _passwordcontroller = TextEditingController();
     _nameController = TextEditingController();
+    autovalidate = false;
   }
 
   @override
@@ -81,21 +84,18 @@ class _LoginPageState extends State<LoginPage> {
                                 child: Center(
                                   child: SingleChildScrollView(
                                     child: RegisterDialog(
+                                      formKey: userFormKey,
                                       onCancel: () {
                                         Navigator.of(context).pop();
                                       },
-                                      height: MediaQuery.of(context).size.height,
+                                      height:
+                                          MediaQuery.of(context).size.height,
                                       nameController: _nameController,
                                       passwordController: _passwordcontroller,
                                       emailController: _emailcontroller,
-                                      autovalidate: autovalidate,
+                                      //autovalidate: autovalidate,
                                       onRegister: () {
-                                        if (_emailcontroller.text.isNotEmpty &&
-                                            _nameController.text.isNotEmpty) {
-                                          if (_passwordcontroller
-                                                  .text.isNotEmpty &&
-                                              _passwordcontroller.text.length >=
-                                                  6) {
+                                        if (userFormKey.currentState.validate()) { //validates Form fields
                                             //Simple try catch to prevent errors, by letting the user edit his input
                                             UserAccount.signIn(
                                                 "user",
@@ -104,24 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 _passwordcontroller.text);
                                             Navigator.of(context)
                                                 .pushNamed("/user");
-                                          } else {
-                                            setState(() {
-                                              autovalidate = true;
-                                              _passwordcontroller
-                                                  .clear(); //So the user has to add the data againe to prevent mistakes
-                                              _emailcontroller.clear();
-                                              _nameController.clear();
-                                            });
-                                          }
-                                        } else {
-                                          setState(() {
-                                            autovalidate = true;
-                                            _passwordcontroller
-                                                .clear(); //So the user has to add the data againe to prevent mistakes
-                                            _emailcontroller.clear();
-                                            _nameController.clear();
-                                          });
-                                        }
+                                        } 
                                       },
                                     ),
                                   ),
@@ -141,12 +124,21 @@ class _LoginPageState extends State<LoginPage> {
                                 child: Center(
                                   child: SingleChildScrollView(
                                     child: ShopRegisterDialog(
-                                        PageController(),
-                                        TextEditingController(),
-                                        TextEditingController(),
-                                        TextEditingController(),
-                                        false,
-                                        MediaQuery.of(context).size.height),
+                                      nameController: _nameController,
+                                      emailController: _emailcontroller,
+                                      passwordController: _passwordcontroller,
+                                      formKey: shopFormKey,
+                                      height:
+                                          MediaQuery.of(context).size.height,
+                                      onCancled: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      onPressed: () {
+                                        if(shopFormKey.currentState.validate()){
+                                          ShopAccoutLogic.signIn("shop", _nameController.text, _emailcontroller.text, _passwordcontroller.text);
+                                        }
+                                      },
+                                    ),
                                   ),
                                 ));
                           },
