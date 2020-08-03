@@ -11,6 +11,7 @@ class BasicTextInput extends StatelessWidget {
   final bool autovalidate;
   final String helptext;
   final Widget phonePrefix;
+  final TextInputType keybardtype;
   const BasicTextInput(
       {Key key,
       this.obscure,
@@ -20,13 +21,15 @@ class BasicTextInput extends StatelessWidget {
       this.validator,
       this.helptext,
       this.autovalidate,
-      this.phonePrefix})
+      this.phonePrefix,
+      this.keybardtype})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
         child: TextFormField(
+          keyboardType: keybardtype??TextInputType.text,
       autovalidate: autovalidate ?? false,
       validator: (value) => validator(value),
       obscureText: obscure ?? false,
@@ -51,6 +54,7 @@ class BasicTextInput extends StatelessWidget {
         //counterStyle: TextStyle(color: Colors.white),
         //focusColor: Colors.green,
         filled: true,
+
         icon: icon,
         labelText: labeltext,
         labelStyle: TextStyle(color: Colors.black),

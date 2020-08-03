@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Title(
-                          child: Text("Registrieren",
+                          child: Text("Register",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 18.0)),
                           color: Colors.orange,
@@ -112,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
                               );
                             },
                             icon: Icon(Icons.person),
-                            label: Text("Kunde"),
+                            label: Text("Customer"),
                             color: Colors.orange,
                           )),
                       Padding(

@@ -16,7 +16,7 @@ class BasicPage extends Scaffold {
                   title: Title(color: Colors.orange, child: Text(title)),
                   actions: actions,
                 ) : appBar : null,
-          body: body,
+          body: SafeArea(child: body),
           drawer:drawer,
         );
 }

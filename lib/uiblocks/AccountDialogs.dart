@@ -28,9 +28,11 @@ class AccountDialog extends AlertDialog {
 
     ///To handle location of widgets etc.
     @required BuildContext context,
+    ///To deal with button pressed
     @required Function onSubmitted,
+    final TextInputType keyboardtype,
   }) : super(
-            title: Title(color: Colors.orange, child: Text(title)),
+            title: Center(child: Title(color: Colors.orange, child: Text(title))),
             actions: [
               FlatButton(
                   onPressed: () => Navigator.of(context).pop(),
@@ -41,17 +43,22 @@ class AccountDialog extends AlertDialog {
                 color: Colors.orange,
               )
             ],
-            content: Column(
-              children: <Widget>[
-                Text(currentInput),
-                BasicTextInput(
-                  phonePrefix: prefix,
-                  autovalidate: autovalidate,
-                  controller: controller,
-                  labeltext: labeltext,
-                  icon: icon,
-                  validator: validator,
-                )
-              ],
+            content: Container(
+              height: MediaQuery.of(context).size.height * 0.22,
+              child: Column(
+                children: <Widget>[
+                  Text("Current: $currentInput"),
+                  Divider(color: Colors.white),
+                  BasicTextInput(
+                    keybardtype: keyboardtype,
+                    phonePrefix: prefix,
+                    autovalidate: autovalidate,
+                    controller: controller,
+                    labeltext: labeltext,
+                    icon: icon,
+                    validator: validator,
+                  )
+                ],
+              ),
             ));
 }

@@ -14,7 +14,8 @@ class EditAccoutPage extends StatefulWidget {
 }
 
 class _EditAccoutPageState extends State<EditAccoutPage> {
-  TextEditingController usernameController; // way to access the new username / stores text inputs
+  TextEditingController
+      usernameController; // way to access the new username / stores text inputs
   TextEditingController emailController;
   TextEditingController phoneController;
   TextEditingController addressController;
@@ -50,126 +51,148 @@ class _EditAccoutPageState extends State<EditAccoutPage> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             Map data = snapshot.data;
-            return Column(
-              children: <Widget>[
-                ListTile(
-                    title: Text("Edit username"),
-                    onTap: () => showDialog(
-                        context: context,
-                        child: AccountDialog(
-                            autovalidate: autovalidate,
-                            context: context,
-                            onSubmitted: () async {
-                              if (usernameController.text.isNotEmpty) {
-                                FirebaseUser currentuser =
-                                    await FirebaseAuth.instance.currentUser();
-                                UserUpdateInfo info = UserUpdateInfo();
-                                info.displayName = usernameController.text;
-                                await currentuser.updateProfile(info);
-                                setState(() {
-                                  autovalidate = false;
-                                });
-                                Navigator.of(context).pop();
-                              } else {
-                                setState(() {
-                                  autovalidate = true;
-                                });
-                              }
-                            },
-                            title: "Edit username",
-                            controller: usernameController,
-                            validator: ValidationOptions.isNotEmpty,
-                            currentInput: data["name"],
-                            labeltext: "Username:",
-                            icon: Icon(Icons.person)))),
-                Divider(),
-                ListTile(
-                  title: Text("Edit email"),
+            return SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  ListTile(
+                      title: Text("Edit username"),
+                      onTap: () => showDialog(
+                          context: context,
+                          child: AccountDialog(
+                              autovalidate: autovalidate,
+                              context: context,
+                              onSubmitted: () async {
+                                if (usernameController.text.isNotEmpty) {
+                                  FirebaseUser currentuser =
+                                      await FirebaseAuth.instance.currentUser();
+                                  UserUpdateInfo info = UserUpdateInfo();
+                                  info.displayName = usernameController.text;
+                                  await currentuser.updateProfile(info);
+                                  setState(() {
+                                    autovalidate = false;
+                                  });
+                                  Navigator.of(context).pop();
+                                } else {
+                                  setState(() {
+                                    autovalidate = true;
+                                  });
+                                }
+                              },
+                              title: "Edit username",
+                              controller: usernameController,
+                              validator: ValidationOptions.isNotEmpty,
+                              currentInput: data["name"],
+                              labeltext: "Username:",
+                              icon: Icon(Icons.person)))),
+                  Divider(),
+                  ListTile(
+                    title: Text("Edit email"),
 
-                  ///Let's the user edit his email address
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        child: AccountDialog(
-                            title: "Edit email",
-                            controller: emailController,
-                            validator: ValidationOptions.isNotEmpty,
-                            currentInput: data["email"],
-                            labeltext: "Email:",
-                            autovalidate: autovalidate,
-                            context: context,
-                            onSubmitted: () {
-                              FirebaseUser currentUser = data["user"];
-                              if (emailController.text.isNotEmpty) {
-                                setState(() {
-                                  autovalidate = true;
-                                });
-                                UserAccount.updateEmail(
-                                    currentUser, emailController.text);
-                                Navigator.of(context).pop();
-                              } else {
-                                setState(() {
-                                  autovalidate = true;
-                                });
-                              }
-                            }));
-                  },
-                ),
-                Divider(),
-                ListTile(
-                  title: Text("Edit address"),
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        child: AccountDialog(
-                            title: "Edit address",
-                            controller: addressController,
-                            validator: ValidationOptions.isNotEmpty,
-                            currentInput: data["address"],
-                            labeltext: "Address",
-                            autovalidate: autovalidate,
-                            context: context,
-                            onSubmitted: () {
-                              if (addressController.text.isNotEmpty) {
-                                UserAccount.editUserAddress(
-                                    data["user"], addressController.text);
-                                setState(() {
-                                  autovalidate = false;
-                                });
-                                Navigator.of(context)
-                                    .pop(); // Pops current route from the stack and returns to the previous one
-                              } else {
-                                setState(() {
-                                  autovalidate = true;
-                                });
-                              }
-                            }));
-                  },
-                ),
-                Divider(),
-                ListTile(
-                  title: Text("Edit phone number"),
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        child: AccountDialog(
-                            prefix: Text("+"),
-                            title: "Edit phone number",
-                            controller: phoneController,
-                            validator: ValidationOptions.isNotEmpty,
-                            currentInput: data["phone"],
-                            labeltext: "Phone number",
-                            autovalidate: autovalidate,
-                            context: context,
-                            onSubmitted: (){
-                              if(phoneController.text.isNotEmpty){
-                              UserAccount.updatePhoneNumber(data["user"], phoneController.text);
-                              }
-                            }));
-                  },
-                ),
-                Divider(),
-              ],
+                    ///Let's the user edit his email address
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          child: AccountDialog(
+                              keyboardtype: TextInputType.emailAddress,
+                              title: "Edit email",
+                              controller: emailController,
+                              validator: ValidationOptions.isNotEmpty,
+                              currentInput: data["email"],
+                              labeltext: "Email:",
+                              autovalidate: autovalidate,
+                              context: context,
+                              onSubmitted: () {
+                                FirebaseUser currentUser = data["user"];
+                                if (emailController.text.isNotEmpty) {
+                                  setState(() {
+                                    autovalidate = true;
+                                  });
+                                  UserAccount.updateEmail(
+                                      currentUser, emailController.text);
+                                  Navigator.of(context).pop();
+                                } else {
+                                  setState(() {
+                                    autovalidate = true;
+                                  });
+                                }
+                              }));
+                    },
+                  ),
+                  Divider(),
+                  ListTile(
+                    title: Text("Edit address"),
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          child: AccountDialog(
+                              title: "Edit address",
+                              controller: addressController,
+                              validator: ValidationOptions.isNotEmpty,
+                              currentInput: data["address"],
+                              labeltext: "Address",
+                              autovalidate: autovalidate,
+                              context: context,
+                              onSubmitted: () {
+                                if (addressController.text.isNotEmpty) {
+                                  UserAccount.editUserAddress(
+                                      data["user"], addressController.text);
+                                  setState(() {
+                                    autovalidate = false;
+                                  });
+                                  Navigator.of(context)
+                                      .pop(); // Pops current route from the stack and returns to the previous one
+                                } else {
+                                  setState(() {
+                                    autovalidate = true;
+                                  });
+                                }
+                              }));
+                    },
+                  ),
+                  Divider(),
+                  ListTile(
+                    title: Text("Edit phone number"),
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          child: AccountDialog(
+                              keyboardtype: TextInputType.phone,
+                              prefix: Text("+"),
+                              title: "Edit phone number",
+                              controller: phoneController,
+                              validator: ValidationOptions.isNotEmpty,
+                              currentInput: data["phone"],
+                              labeltext: "Phone number",
+                              autovalidate: autovalidate,
+                              context: context,
+                              onSubmitted: () async {
+                                if (phoneController.text.isNotEmpty) {
+                                  bool ret =
+                                      await UserAccount.updatePhoneNumber(
+                                          data["user"], phoneController.text);
+                                  if (ret) {
+                                    Scaffold.of(context).showSnackBar(SnackBar(
+                                      duration: Duration(seconds: 3),
+                                      content:
+                                          Text("Your request was successfull"),
+                                      action: SnackBarAction(
+                                          textColor: Colors.orange,
+                                          label: "Ok", onPressed: (){}),
+                                    ));
+                                  } else {
+                                    Scaffold.of(context).showSnackBar(SnackBar(
+                                      duration: Duration(seconds:3),
+                                        content:
+                                            Text("Your request failed!"),
+                                            action: SnackBarAction(label: "Ok",onPressed: (){},textColor: Colors.orange,)));
+                                  }
+                                }
+                              }));
+                    },
+                  ),
+                  Divider(),
+                ],
+              ),
             );
           } else if (snapshot.hasError) {
             return AlertDialog(

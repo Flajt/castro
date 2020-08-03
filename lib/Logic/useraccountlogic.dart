@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth_ui/providers.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth_ui/firebase_auth_ui.dart' as auth;
 
@@ -13,11 +11,21 @@ class UserAccount {
 
   ///Querrys the database if the user has already completed his account
   static Future accountCompleted() async {
-    DatabaseReference reference =
-        FirebaseDatabase.instance.reference(); //creates db reference
-    bool ret =
-        reference.buildArguments().containsKey("done"); // querrys db for key
-    return ret; //returns wether it's there or not
+    bool stepOne;
+    FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
+    DatabaseReference reference =FirebaseDatabase.instance.reference(); //creates db reference
+    DataSnapshot data = await reference.child("/users/${currentUser.uid}").once();//grabs the db once
+    stepOne = data.value.containsKey("address"); //checks if the address entry exists
+    if (stepOne) {
+      if (currentUser.phoneNumber.isNotEmpty &&
+          currentUser.phoneNumber != null) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 
   ///Signs the user in
@@ -84,25 +92,27 @@ class UserAccount {
     Map<String, dynamic> data = await getUserCreds(); //cals get user creds
     FirebaseUser user = data["user"];
     String uid = user.uid; // get user unique identifier
-    DatabaseReference db = dbinstance.reference().child("/users/$uid"); //creates db reference
+    DatabaseReference db =
+        dbinstance.reference().child("/users/$uid"); //creates db reference
     DataSnapshot ret = await db.once(); // get's the db's data
     Map values = ret.value; // converts it into native values -> Map
-    if (values.isNotEmpty) {
-      if (values.containsKey(uid) == true) {
+    if (values != null) {
+      print("Values: $values");
+      if (values.containsKey("address") == true) {
         //trys to fetch users uid
-        address = values[uid]["address"];
+        address = values["address"];
       } else {
         address = "";
       }
-      } else{
-        address ="";
-      }
-      if (user != null) {
-        data["phone"] = user.phoneNumber; //adds users phone number and adress
-        data["address"] = address;
-        return data;
-      } else {
-        return null;
+    } else {
+      address = null;
+    }
+    if (user != null) {
+      data["phone"] = user.phoneNumber; //adds users phone number and adress
+      data["address"] = address;
+      return data;
+    } else {
+      return null;
     }
   }
 
@@ -117,20 +127,26 @@ class UserAccount {
     DatabaseReference reference = instance.reference();
     String id = user.uid;
     await reference.child("/users/$id").update({"address": address});
+    await user.reload();
   }
 
-  static updatePhoneNumber(FirebaseUser currentUser, String phonenumber) async {
+  static Future<bool> updatePhoneNumber(
+      FirebaseUser currentUser, String phonenumber) async {
     //Workaround, idealy the phone number would be added via   currentUser.updatePhoneNumberCredential(credential) method, which would require
-    bool completed;
+
+    bool completed = true;
     await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: phonenumber,
-        timeout: Duration(minutes: 5),
+        phoneNumber: "+$phonenumber",
+        timeout: Duration(seconds: 120),
         verificationCompleted: (credital) =>
             currentUser.updatePhoneNumberCredential(credital),
-        verificationFailed: (exeception) => completed = false,
+        verificationFailed: (exeception) {
+          print(exeception.message);
+          completed = false;
+        },
         codeSent: null,
         codeAutoRetrievalTimeout: null);
-
+    await currentUser.reload();
     return completed;
   }
 }
