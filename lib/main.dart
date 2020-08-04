@@ -1,5 +1,7 @@
 import 'package:castro/Pages/accountsettings.dart';
 import 'package:castro/Pages/settings.dart';
+import 'package:castro/Pages/shopSettingsPage.dart';
+import 'package:castro/Pages/shophomescreen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Pages/loginpage.dart';
@@ -32,12 +34,15 @@ class MyApp extends StatelessWidget {
         "/user": (BuildContext context) => UserHomeScreen(),
         "/user/settings" : (BuildContext context) => AccountPage(),
         "/user/settings/edit" : (BuildContext context) => EditAccoutPage(),
+        "/shop" : (BuildContext context) => ShopHomeScreen(),
+        "/shop/settings" : (BuildContext context) => ShopSettingsPage(),
       },
       theme: ThemeData(
         backgroundColor: Colors.white,
         accentColor: Colors.black,
         primaryColorDark: Colors.deepOrange,
         iconTheme: IconThemeData(color: Colors.black),
+        primaryIconTheme: IconThemeData(color: Colors.black),
         scaffoldBackgroundColor: Colors.white,
         buttonColor: Colors.orange,
         // This is the theme of your application.
@@ -60,7 +65,7 @@ class MyApp extends StatelessWidget {
           : type == "user"
               ? UserHomeScreen(
                 )
-              : null,
+              : ShopHomeScreen(),
     );
   }
 }

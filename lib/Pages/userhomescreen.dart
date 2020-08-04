@@ -31,12 +31,16 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
     return BasicPage(
       actions: <Widget>[
         IconButton(
+          tooltip: "Refresh",
             icon: Icon(
               Icons.refresh,
               color: Colors.black,
             ),
             onPressed: () {
               setState(() {
+                ///Reload option to update if data has changed
+                getUserCreds = UserAccount.getUserCreds();
+                userSetupCompleted = UserAccount.accountCompleted();
               });
             })
       ],
@@ -46,8 +50,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
       appBar: AppBar(
         actions: <Widget>[
           IconButton(
+            tooltip: "Refresh",
             icon: Icon(Icons.refresh),
             onPressed: () => setState(() {
+              ///Same Reload option
+              getUserCreds = UserAccount.getUserCreds();//should refresh screen if pressed
+              userSetupCompleted = UserAccount.accountCompleted();
             }),
           )
         ],
@@ -69,7 +77,6 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             userSetupCompleted, //Checks if the user has his finished profile creation
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
-            print(snapshot.data);
             if (snapshot.data == false) {
               return Stack(children: [
                 //Stack allows to place Widgets on top of each other, in this case it's used to place the Icon ontop of the card which displays the message
@@ -99,7 +106,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                 )
               ]);
             } else {
-              return SearchInterFace(); //TODO: Implement
+              return Center(child: SearchInterFace()); 
             }
           } else if (snapshot.hasError) {
             return AlertDialog(

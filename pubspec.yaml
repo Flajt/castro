@@ -33,13 +33,14 @@ dependencies:
   pdf: ^1.6.1
   firebase_core: ^0.4.5
   firebase_storage: ^3.1.6
-  firebase_picture_uploader: ^1.0.0+6
+  #firebase_picture_uploader: ^1.0.0+6
   firebase_database: ^3.1.6
   firebase_auth_oauth: ^0.1.1+1
   firebase_auth: ^0.16.1
   firebase_analytics: ^5.0.2
-  firebase_auth_ui: ^1.0.1 #test
-  image_picker: 0.6.7+4
+  #firebase_auth_ui: ^1.0.1 #test
+  #image_picker: 0.6.7+4
+  file_picker: ^1.13.0+1 #IOS needs some permissions,check documentation for later
   shared_preferences: ^0.5.8
   pdf_viewer_plugin: ^1.0.0+2 #should be used 
   

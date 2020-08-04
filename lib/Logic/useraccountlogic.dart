@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_auth_ui/firebase_auth_ui.dart' as auth;
 
 class UserAccount {
   ///Allows the user to let the database save data on device to improve usability
@@ -13,7 +12,7 @@ class UserAccount {
   static Future accountCompleted() async {
     bool stepOne;
     FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
-    DatabaseReference reference =FirebaseDatabase.instance.reference(); //creates db reference
+    DatabaseReference reference = FirebaseDatabase.instance.reference(); //creates db reference
     DataSnapshot data = await reference.child("/users/${currentUser.uid}").once();//grabs the db once
     stepOne = data.value.containsKey("address"); //checks if the address entry exists
     if (stepOne) {
@@ -74,13 +73,12 @@ class UserAccount {
   }
 
   ///Deletes currentUser and clear SharedPreferences
-  static deleteUser() async {
+  static Future<void> deleteUser() async {
     //TODO: Check if we need to remove database entrys manually? 2. Send follow up email ?
     FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
 
     ///Deletes user from firebase
     await currentUser.delete();
-    auth.FirebaseAuthUi.instance().delete();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
   }
@@ -97,7 +95,6 @@ class UserAccount {
     DataSnapshot ret = await db.once(); // get's the db's data
     Map values = ret.value; // converts it into native values -> Map
     if (values != null) {
-      print("Values: $values");
       if (values.containsKey("address") == true) {
         //trys to fetch users uid
         address = values["address"];

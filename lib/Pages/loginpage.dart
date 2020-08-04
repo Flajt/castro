@@ -136,6 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                                       onPressed: () {
                                         if(shopFormKey.currentState.validate()){
                                           ShopAccoutLogic.signIn("shop", _nameController.text, _emailcontroller.text, _passwordcontroller.text);
+                                          Navigator.of(context).pushNamed("/shop");
                                         }
                                       },
                                     ),
