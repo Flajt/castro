@@ -13,12 +13,12 @@ class ShopHomeScreen extends StatefulWidget {
 
 class _ShopHomeScreenState extends State<ShopHomeScreen> {
   Future accountComplete;
-  Future getUserCreds;
+  Future getShopCreds;
   @override
   void initState() {
     super.initState();
     accountComplete = ShopAccoutLogic.accountCompleted();
-    getUserCreds = ShopAccoutLogic.getUserCreds();
+    getShopCreds = ShopAccoutLogic.getShopCreds();
   }
 
   @override
@@ -39,7 +39,7 @@ class _ShopHomeScreenState extends State<ShopHomeScreen> {
           title: Title(
               color: Colors.orange,
               child: FutureBuilder(
-                future: getUserCreds,
+                future: getShopCreds,
                 builder: (context, snapshot) {
                   if(snapshot.hasData){
                     Map data = snapshot.data;

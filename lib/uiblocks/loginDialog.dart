@@ -65,3 +65,58 @@ class RegisterDialog extends AlertDialog {
               )
             ]);
 }
+
+class LoginDialog extends AlertDialog {
+  LoginDialog({
+    @required TextEditingController passwordController,
+    @required TextEditingController emailController,
+
+    @required double height,
+
+    ///FormKey for validation logic
+    @required formKey,
+
+    ///Function which will be run on if the registe button is pressed
+    Function onLogin,
+
+    ///Function which will be run if the cancel button is pressed
+    Function onCancel,
+  }) : super(
+            title: Center(
+              child: Title(
+                child: Text("Login"),
+                color: Colors.orange,
+              ),
+            ),
+            content: Container(
+              height: height * 0.43,
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: <Widget>[
+                    BasicTextInput(
+                        controller: emailController,
+                        labeltext: "Email",
+                        icon: Icon(Icons.email),
+                        validator: ValidationOptions.isNotEmpty),
+                    Divider(),
+                    BasicTextInput(
+                        controller: passwordController,
+                        labeltext: "Password",
+                        validator: ValidationOptions.passwortValidator,
+                        icon: Icon(Icons.vpn_key),
+                        obscure: true)
+                  ],
+                ),
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(onPressed: onCancel, child: Text("Cancel")),
+              RaisedButton(
+                onPressed: onLogin,
+                color: Colors.orange,
+                child: Text("Login"),
+              )
+            ]);
+}
+

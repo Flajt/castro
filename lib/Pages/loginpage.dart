@@ -1,9 +1,8 @@
 import 'dart:ui';
+import 'package:castro/Logic/loginLogic.dart';
 import 'package:castro/Logic/shopAccountLogic.dart';
 import 'package:castro/Logic/useraccountlogic.dart';
-import 'package:castro/Logic/validator/basicvalidation.dart';
 import 'package:castro/uiblocks/BasicPage.dart';
-import 'package:castro/uiblocks/BasicText.dart';
 import 'package:castro/uiblocks/loginDialog.dart';
 import 'package:castro/uiblocks/shopLoginDialog.dart';
 import 'package:flutter/material.dart';
@@ -23,11 +22,14 @@ class _LoginPageState extends State<LoginPage> {
   bool autovalidate;
   final userFormKey = GlobalKey<FormState>();
   final shopFormKey = GlobalKey<FormState>();
+  final shopLoginFormKey = GlobalKey<FormState>();
+  final userLoginFormKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
     //auth.FirebaseAuthUi.instance().launchAuth([AuthProvider.email()]);
-    _emailcontroller = TextEditingController(); //initializing here prevents reinintialization due to statechanges
+    _emailcontroller =
+        TextEditingController(); //initializing here prevents reinintialization due to statechanges
     _passwordcontroller = TextEditingController();
     _nameController = TextEditingController();
     autovalidate = false;
@@ -48,16 +50,20 @@ class _LoginPageState extends State<LoginPage> {
     return SafeArea(
       child: BasicPage(
         requireAppbar: false,
-        body: Stack(
-          children: <Widget>[
-            Image.asset(
-              "assets/wine.jpg",
-              fit: BoxFit.fill,
-              width: _size.width,
-              height: _size.height,
-            ),
-            Center(
+        body: Stack(children: <Widget>[
+          Image.asset(
+            "assets/wine.jpg",
+            fit: BoxFit.fill,
+            width: _size.width,
+            height: _size.height,
+          ),
+          Center(
               child: Container(
+                //padding: EdgeInsets.all(13.0),
+                width: _size.width * 0.7,
+                height: _size.height * 0.33,
+            child: PageView(controller: PageController(), children: [
+              Container(
                 padding: EdgeInsets.all(13.0),
                 width: _size.width * 0.7,
                 height: _size.height * 0.33,
@@ -95,16 +101,18 @@ class _LoginPageState extends State<LoginPage> {
                                       emailController: _emailcontroller,
                                       //autovalidate: autovalidate,
                                       onRegister: () {
-                                        if (userFormKey.currentState.validate()) { //validates Form fields
-                                            //Simple try catch to prevent errors, by letting the user edit his input
-                                            UserAccount.signIn(
-                                                "user",
-                                                _nameController.text,
-                                                _emailcontroller.text,
-                                                _passwordcontroller.text);
-                                            Navigator.of(context)
-                                                .pushNamed("/user");
-                                        } 
+                                        if (userFormKey.currentState
+                                            .validate()) {
+                                          //validates Form fields
+                                          //Simple try catch to prevent errors, by letting the user edit his input
+                                          UserAccount.signIn(
+                                              "user",
+                                              _nameController.text,
+                                              _emailcontroller.text,
+                                              _passwordcontroller.text);
+                                          Navigator.of(context)
+                                              .pushNamed("/user");
+                                        }
                                       },
                                     ),
                                   ),
@@ -134,9 +142,15 @@ class _LoginPageState extends State<LoginPage> {
                                         Navigator.of(context).pop();
                                       },
                                       onPressed: () {
-                                        if(shopFormKey.currentState.validate()){
-                                          ShopAccoutLogic.signIn("shop", _nameController.text, _emailcontroller.text, _passwordcontroller.text);
-                                          Navigator.of(context).pushNamed("/shop");
+                                        if (shopFormKey.currentState
+                                            .validate()) {
+                                          ShopAccoutLogic.signIn(
+                                              "shop",
+                                              _nameController.text,
+                                              _emailcontroller.text,
+                                              _passwordcontroller.text);
+                                          Navigator.of(context)
+                                              .pushNamed("/shop");
                                         }
                                       },
                                     ),
@@ -152,9 +166,109 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-            )
-          ],
-        ),
+              Container(
+                padding: EdgeInsets.all(13.0),
+                width: _size.width * 0.7,
+                height: _size.height * 0.33,
+                child: Card(
+                  color: Colors.amber,
+                  elevation: 10.0,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Title(
+                          child: Text("Login",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18.0)),
+                          color: Colors.orange,
+                        ),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: RaisedButton.icon(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                child: Center(
+                                  child: SingleChildScrollView(
+                                    child: LoginDialog(
+                                      formKey: userFormKey,
+                                      onCancel: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      height:
+                                          MediaQuery.of(context).size.height,
+                                      passwordController: _passwordcontroller,
+                                      emailController: _emailcontroller,
+                                      //autovalidate: autovalidate,
+                                      onLogin: () async {
+                                        if (userFormKey.currentState
+                                            .validate()) {
+                                          //validates Form fields
+                                          //Simple try catch to prevent errors, by letting the user edit his input
+                                          bool ret = await LoginLogic.login(
+                                              _emailcontroller.text,
+                                              _passwordcontroller.text,
+                                              "user");
+                                          if (ret) {
+                                            Navigator.of(context)
+                                                .pushNamed("/user");
+                                          }
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                            icon: Icon(Icons.person),
+                            label: Text("Customer"),
+                            color: Colors.orange,
+                          )),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: RaisedButton.icon(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                child: Center(
+                                  child: SingleChildScrollView(
+                                    child: LoginDialog(
+                                      emailController: _emailcontroller,
+                                      passwordController: _passwordcontroller,
+                                      formKey: shopLoginFormKey,
+                                      height:
+                                          MediaQuery.of(context).size.height,
+                                      onLogin: () async {
+                                        if (shopLoginFormKey.currentState
+                                            .validate()) {
+                                          bool ret = await LoginLogic.login(
+                                              _emailcontroller.text,
+                                              _passwordcontroller.text,
+                                              "shop");
+                                          if (ret) {
+                                            Navigator.of(context)
+                                                .pushNamed("/shop");
+                                          }
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ));
+                          },
+                          icon: FaIcon(FontAwesomeIcons.store),
+                          label: Text("Resturant"),
+                          color: Colors.orange,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ]),
+          ))
+        ]),
       ),
     );
   }

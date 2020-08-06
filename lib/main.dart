@@ -1,7 +1,9 @@
+import 'package:castro/Logic/useraccountlogic.dart';
 import 'package:castro/Pages/accountsettings.dart';
 import 'package:castro/Pages/settings.dart';
 import 'package:castro/Pages/shopSettingsPage.dart';
 import 'package:castro/Pages/shophomescreen.dart';
+import 'package:castro/uiblocks/AccountDialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Pages/loginpage.dart';
@@ -9,6 +11,7 @@ import 'Pages/userhomescreen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  UserAccount.setoffline(true);
   SharedPreferences prefs = await SharedPreferences.getInstance();
   var type = prefs.get("type");
   var username = prefs.get("name");
@@ -36,6 +39,7 @@ class MyApp extends StatelessWidget {
         "/user/settings/edit" : (BuildContext context) => EditAccoutPage(),
         "/shop" : (BuildContext context) => ShopHomeScreen(),
         "/shop/settings" : (BuildContext context) => ShopSettingsPage(),
+        "/shop/settings/openingtimes" : (BuildContext context) => OpenIngTimePicker(),
       },
       theme: ThemeData(
         backgroundColor: Colors.white,

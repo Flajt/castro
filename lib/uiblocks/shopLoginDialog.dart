@@ -47,7 +47,7 @@ class ShopRegisterDialog extends AlertDialog {
                       ),
                       BasicTextInput(
                         controller: passwordController,
-                        labeltext: "Passwort",
+                        labeltext: "Password",
                         obscure: true,
                         validator: ValidationOptions.passwortValidator,
                         icon: Icon(Icons.vpn_key),
