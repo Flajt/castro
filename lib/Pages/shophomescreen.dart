@@ -14,6 +14,7 @@ class ShopHomeScreen extends StatefulWidget {
 class _ShopHomeScreenState extends State<ShopHomeScreen> {
   Future accountComplete;
   Future getShopCreds;
+  String uid;
   @override
   void initState() {
     super.initState();
@@ -42,8 +43,11 @@ class _ShopHomeScreenState extends State<ShopHomeScreen> {
                 future: getShopCreds,
                 builder: (context, snapshot) {
                   if(snapshot.hasData){
-                    Map data = snapshot.data;
-                    String name = data["name"];
+                    Map _data = snapshot.data;
+                    String name = _data["name"];
+                    if(_data["user"]!=null){
+                    uid = _data["user"].uid;
+                    }
                     return Text(name);
                   }else{
                     return Text("Welcome");
@@ -54,7 +58,9 @@ class _ShopHomeScreenState extends State<ShopHomeScreen> {
             if(snapshot.hasData){
               bool data = snapshot.data;
               if(data){
-                return InfoScreen();
+                return InfoScreen(
+                  uid: uid,
+                );
               }
               else{
                 return Stack(children: [
@@ -68,7 +74,7 @@ class _ShopHomeScreenState extends State<ShopHomeScreen> {
                       color: Colors.orange,
                       child: Center(
                           child: Text(
-                        "Please complete your user profile,\n so you can start to use the app!",
+                        "Please complete your user profile,\n so you can start to use the App!",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16.0),
                       )),

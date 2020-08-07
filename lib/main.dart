@@ -39,7 +39,6 @@ class MyApp extends StatelessWidget {
         "/user/settings/edit" : (BuildContext context) => EditAccoutPage(),
         "/shop" : (BuildContext context) => ShopHomeScreen(),
         "/shop/settings" : (BuildContext context) => ShopSettingsPage(),
-        "/shop/settings/openingtimes" : (BuildContext context) => OpenIngTimePicker(),
       },
       theme: ThemeData(
         backgroundColor: Colors.white,

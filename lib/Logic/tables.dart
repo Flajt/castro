@@ -4,7 +4,7 @@ class ResturantTable{
   final int number;
   ///Max. number of persons which can fit at one table
   final int numPersons;
-  ///String is the table inside or outside (0=inside, 1=outside)
+  ///String is the table inside or outside (false=inside, true=outside)
   final bool where;
   ResturantTable({this.number,this.numPersons,this.where});
 }

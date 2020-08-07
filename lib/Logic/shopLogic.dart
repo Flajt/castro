@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'package:castro/Logic/tables.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 ///Handles non account based logic
@@ -14,35 +14,45 @@ class ShopLogic {
     if (snapshot.value != null) {
       Map values = snapshot.value;
       if (snapshot.value.containsKey("tables")) {
-        print(values["tables"]);
-        String tables = values["tables"];
-        List<ResturantTable> tableList = json.decode(tables);
+        List<ResturantTable> tableList = [];
+        print(values["tables"].runtimeType);
+        Map tables = values["tables"];
+        for (String key in tables.keys){
+          tableList.add(
+            ResturantTable(
+              number: int.parse(key),
+              numPersons: tables[key]["numPersons"],
+              where: tables[key]["where"],
+            )
+          );
+        }
+
         return tableList;
       } else {
-        return [false];
+        return [];
       }
     } else {
-      return [false];
+      return [];
     }
   }
 
   ///Adds table to db
-  static Future<void> addTable(int tableNum, int numPersons, int where) async {
+  static Future<void> addTable(int tableNum, int numPersons, bool where) async {
     FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
     String uid = currentUser.uid;
     DatabaseReference reference = FirebaseDatabase.instance.reference();
-    reference.child("/shops/$uid").update({
-      "tables": {
-        "tableNum": tableNum,
+    reference.child("/shops/$uid/tables").update({
+      "$tableNum": {
         "numPersons": numPersons,
         "where": where,
-        "reserved": {},
       }
     });
+    ///Creates QR-Code for table in a folder
   }
-  static get getTablesasync async *{
+  ///Deletes the selected table
+  static void deleteTable(String number)async{
     FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
     String uid = currentUser.uid;
-    FirebaseDatabase.instance.reference().child("/shops/$uid/tables").onValue;
+    await FirebaseDatabase.instance.reference().child("/shops/$uid/tables/$number").remove();
   }
 }
