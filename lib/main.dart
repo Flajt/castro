@@ -3,6 +3,7 @@ import 'package:castro/Pages/accountsettings.dart';
 import 'package:castro/Pages/settings.dart';
 import 'package:castro/Pages/shopSettingsPage.dart';
 import 'package:castro/Pages/shophomescreen.dart';
+import 'package:castro/Pages/tablePage.dart';
 import 'package:castro/uiblocks/AccountDialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,7 +37,9 @@ class MyApp extends StatelessWidget {
         "/login": (BuildContext context) => LoginPage(),
         "/user": (BuildContext context) => UserHomeScreen(),
         "/user/settings" : (BuildContext context) => AccountPage(),
+        "/user/shopTable" : (BuildContext context) => TablePage(),
         "/user/settings/edit" : (BuildContext context) => EditAccoutPage(),
+        "/user/menu" :(BuildContext context) => MenuPage(),
         "/shop" : (BuildContext context) => ShopHomeScreen(),
         "/shop/settings" : (BuildContext context) => ShopSettingsPage(),
       },

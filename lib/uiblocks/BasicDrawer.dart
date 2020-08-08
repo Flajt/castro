@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:castro/Logic/shopAccountLogic.dart';
+import 'package:castro/Logic/shopLogic.dart';
 import 'package:castro/Logic/signout.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class UserDrawerStorage extends StatelessWidget {
   const UserDrawerStorage({Key key}) : super(key: key);
@@ -39,7 +41,7 @@ class UserDrawerStorage extends StatelessWidget {
     );
   }
 }
-
+///Drawer storage for the shop
 class ShopDrawerStorage extends StatelessWidget {
   const ShopDrawerStorage({Key key}) : super(key: key);
 
@@ -67,6 +69,14 @@ class ShopDrawerStorage extends StatelessWidget {
             leading: Icon(Icons.file_download,color: Colors.black,),
             title: Text("Download visitor history"),
             onTap: (){},
+          ),
+          Divider(color: Colors.black38),
+          ListTile(
+            leading: Icon(FontAwesomeIcons.qrcode,color: Colors.black,),
+            title: Text("Download QR-Codes"),
+            onTap: ()async{
+              var ret = await ShopLogic.downloadQrCodes();
+            },
           ),
           Divider(color: Colors.black38),
           ListTile(

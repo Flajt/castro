@@ -89,7 +89,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                       color: Colors.orange,
                       child: Center(
                           child: Text(
-                        "Please complete your user profile,\n so you can start to use the app!",
+                        "Please complete your user profile,\n so you can start to use the App!",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16.0),
                       )),

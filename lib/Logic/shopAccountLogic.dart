@@ -1,7 +1,4 @@
-import 'dart:convert';
 import 'dart:io';
-
-import 'package:castro/Logic/tables.dart';
 import 'package:castro/Logic/useraccountlogic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -23,6 +20,12 @@ class ShopAccoutLogic {
       FirebaseUser currentUser = result.user;
       UserUpdateInfo info = UserUpdateInfo();
       info.displayName = shopname;
+      String uid = currentUser.uid;
+      FirebaseDatabase.instance
+          .reference()
+          .child("/shops/$uid")
+          .set({"name": currentUser.displayName});
+
       await currentUser.updateProfile(info);
     }
   }
@@ -77,8 +80,6 @@ class ShopAccoutLogic {
     }
   }
 
-  
-
   ///Deletes the user by using [UserAccount.deleteUser()]
   static Future<void> deleteAccount() async {
     await UserAccount.deleteUser();
@@ -130,7 +131,8 @@ class ShopAccoutLogic {
     Map<String, dynamic> data = await getShopCreds(); //calls to get user creds
     FirebaseUser user = data["user"];
     String uid = user.uid; // get user unique identifier
-    DatabaseReference db = dbinstance.reference().child("/shops/$uid"); //creates db reference
+    DatabaseReference db =
+        dbinstance.reference().child("/shops/$uid"); //creates db reference
     DataSnapshot ret = await db.once(); // get's the db's data
     Map values = ret.value; // converts it into native values -> Map
     if (values != null) {
@@ -144,7 +146,7 @@ class ShopAccoutLogic {
         print(values);
         openingtimes = values["openingtimes"];
       } else {
-        openingtimes = {"Monday":""};
+        openingtimes = {"Monday": ""};
       }
       if (values.containsKey("phone")) {
         phone = values["phone"];
@@ -158,36 +160,44 @@ class ShopAccoutLogic {
       data["phone"] = phone; //adds users phone number and adress
       data["address"] = address;
       data["openingtimes"] = openingtimes;
-      data["tags"] = values["tags"]??"";
+      data["tags"] = values["tags"] ?? "";
       return data;
     } else {
       return null;
     }
   }
-  ///Updates phone number of the shop 
-  static Future<void> editPhoneNumber(String phonenumber)async{
+
+  ///Updates phone number of the shop
+  static Future<void> editPhoneNumber(String phonenumber) async {
     FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
     String uid = currentUser.uid;
     DatabaseReference reference = FirebaseDatabase.instance.reference();
-    reference.child("/shops/$uid").update({"phone":phonenumber});
+    reference.child("/shops/$uid").update({"phone": phonenumber});
   }
+
   ///Updates the shops address
-  static Future<void> editAddress(FirebaseUser currentUser, String address)async{
+  static Future<void> editAddress(
+      FirebaseUser currentUser, String address) async {
     DatabaseReference reference = FirebaseDatabase.instance.reference();
-    reference.child("/shops/${currentUser.uid}").update({"address":address});
+    reference
+        .child("/shops/${currentUser.uid}")
+        .update({"address": address});
   }
+
   ///Updates opening times of the shop
-  static Future<void> editOpeningTimes(Map<String,List<String>>openingTimes)async {
+  static Future<void> editOpeningTimes(
+      Map<String, List<String>> openingTimes) async {
     FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
     String uid = currentUser.uid;
     DatabaseReference reference = FirebaseDatabase.instance.reference();
-    await reference.child("/shops/$uid").update({"openingtimes":openingTimes});
+    await reference.child("/shops/$uid").update({"openingtimes": openingTimes});
   }
+
   ///Updates resturant tags on what they offer
-  static Future<void> editTags(List<String> tags)async{
+  static Future<void> editTags(List<String> tags) async {
     FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
     String uid = currentUser.uid;
     DatabaseReference reference = FirebaseDatabase.instance.reference();
-    await reference.child("/shops/$uid").update({"tags":tags});
+    await reference.child("/shops/$uid").update({"tags": tags});
   }
 }
