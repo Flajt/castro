@@ -52,3 +52,7 @@ samples, guidance on mobile development, and a full API reference.
 1. Navigate to the project folder
 2. Open the terminal and type : _flutter run_
 3. This should build the apk and deliver it to your phone so you can use the App (provided you plugged your phone in beforehand!)
+
+## Info:
+- There might be an error after registration, just press the reload button and fill in your account details
+- Adding a phone number works only with a real number for verification, my current device (Samsung S6) doesn't need a manual code to be entered, so no solution for manul entering is currently given. If problem arise please contacte me, and I will try to sort them out asasp
