@@ -78,8 +78,7 @@ class UserShopOptions {
   ///Querrys all resturants for the search field, and stores their selected properties in the [Resturant] class
   static Future getResturants() async {
     List<Resturant> resturants = [];
-    DataSnapshot snapshot =
-        await FirebaseDatabase.instance.reference().child("/shops/").once();
+    DataSnapshot snapshot =await FirebaseDatabase.instance.reference().child("/shops/").once();
     Map data = snapshot.value;
     print(data.keys);
     for (var key in data.keys) {
