@@ -5,7 +5,6 @@ import 'package:castro/Pages/settings.dart';
 import 'package:castro/Pages/shopSettingsPage.dart';
 import 'package:castro/Pages/shophomescreen.dart';
 import 'package:castro/Pages/tablePage.dart';
-import 'package:castro/uiblocks/AccountDialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Pages/loginpage.dart';
@@ -33,6 +32,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Castro',
       routes: <String, WidgetBuilder>{
         "/login": (BuildContext context) => LoginPage(),
