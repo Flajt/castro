@@ -4,8 +4,6 @@ import 'package:castro/Logic/resturant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
-import 'package:pdf/widgets.dart';
 
 ///Manges the optins a user has regarding shops like, claming tables, bookings a.s.o
 class UserShopOptions {

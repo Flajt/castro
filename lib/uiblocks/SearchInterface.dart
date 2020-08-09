@@ -20,6 +20,7 @@ class _SearchInterFaceState extends State<SearchInterFace> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    const List _days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
     /*List<Resturant> resturants = [        | for tests only
       Resturant(
           name: "Vulcano",
@@ -100,6 +101,16 @@ class _SearchInterFaceState extends State<SearchInterFace> {
                                 child: AlertDialog(
                                   actions: [
                                     Tooltip(
+                                      message: "View menu",
+                                      child: IconButton(
+                                          icon: Icon(Icons.restaurant_menu),
+                                          onPressed: () => Navigator.of(context)
+                                                  .pushNamed("/user/menu",
+                                                      arguments: {
+                                                    "shopid": resturant.key
+                                                  })),
+                                    ),
+                                    Tooltip(
                                       message: "Navigate to",
                                       child: IconButton(
                                           icon:
@@ -153,11 +164,14 @@ class _SearchInterFaceState extends State<SearchInterFace> {
                                                 itemCount: resturant
                                                     .openingTimes.keys.length,
                                                 itemBuilder: (context, index) {
-                                                  String day = resturant
+                                                  /*List days = resturant
                                                       .openingTimes.keys
-                                                      .toList()[index];
+                                                      .toList();
+                                                      days.sort();*/
+                                                  String day = _days[index];
+                                                  //Creates opening times and removes brackets for cleaner look
                                                   String openingTime = resturant
-                                                      .openingTimes[day]
+                                                      .openingTimes[day]??""
                                                       .toString()
                                                       .replaceAll("[", "")
                                                       .replaceAll("]", "");

@@ -11,18 +11,19 @@ This project is a starting point for a Flutter application.
  - generate QR-Codes for your tables so you know when which customer was at your resturant
  - enter / view resturant opening times so you will always be on time
  - figure out what a resturant is offering by viewing it's *tags* (resturants can create these)
- - have a look at the menue before you arrive (resturants can upload there menue for customers via pdf files)
+ - have a look at the menue ,even before, you arrive (resturants can upload there menue for customers via pdf files)
  - call the resturant right away for questions or reservations (resturants can store there phone number in app)
+ - search resturants via *tags* to find what you like
  - **it's free**
  - more features yet to come
  
 # Planned:
  - book tables at a time you desire
- - improve address managment system
+ - (improve address managment system)
  - orderable menue
  - in app payments for food
  - reviews?
- - recommendations
+ - (recommendations)
  - ads (not aggressiv) and donations to finance backend
  - **and much more**
  

@@ -118,7 +118,8 @@ class ShopLogic {
       //print("$numCurrentItems from ${test.length}");
       _widgets.addAll(_createBlockEntry(
           document, test[numCurrentItems], tablenums[numCurrentItems]));
-      if (splitable > test.length|| (test.length-numCurrentItems)==overflow) {
+      if (splitable > test.length ||
+          (test.length - numCurrentItems) == overflow) {
         if (test.length == numCurrentItems) {
           document.addPage(pw.Page(
               pageFormat: PdfPageFormat.a4,
@@ -130,7 +131,7 @@ class ShopLogic {
               }));
         }
         //This condition needs rework
-        if(test.length>overflow){
+        if (test.length > overflow) {
           document.addPage(pw.Page(
               pageFormat: PdfPageFormat.a4,
               build: (pw.Context context) {
@@ -141,7 +142,7 @@ class ShopLogic {
               }));
         }
       }
-      
+
       currentIteration += 1;
 
       if (currentIteration == splitable) {
@@ -156,15 +157,13 @@ class ShopLogic {
             }));
         currentIteration = 0;
         _widgets = [];
-        
       }
-
-      
     }
     Uint8List data = document.save();
     //Test for checking the file layout
     await File("${savedir.path.toString()}/qr.pdf").writeAsBytes(data);
-  await ShareExtend.share("${savedir.path.toString()}/qr.pdf", "file",subject: "Your Castro Qr-Codes");
+    await ShareExtend.share("${savedir.path.toString()}/qr.pdf", "file",
+        subject: "Your Castro Qr-Codes");
   }
 
   ///Helper function which creates one Qr-Code with table number and advertisment
@@ -180,5 +179,92 @@ class ShopLogic {
           style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
       pw.Divider(),
     ];
+  }
+
+  static Future<void> downloadVisitorData() async {
+    FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
+    String uid = currentUser.uid;
+    DataSnapshot ret = await FirebaseDatabase.instance
+        .reference()
+        .child("/shops/$uid/info")
+        .once();
+    Map data = ret.value;
+    String _name = currentUser.displayName;
+    //Used to prevent long time storage of sensetive data
+    Directory tempDir = await getTemporaryDirectory();
+    File file = File(tempDir.path + "/${_name}_visitordata.pdf");
+    pw.Document document = pw.Document();
+    //A4 page Size is expected, this page is the first page of the document
+    pw.Page initalPageData = pw.Page(
+      pageFormat: PdfPageFormat.a4,
+      build: (context) {
+        return pw.Column(
+            mainAxisAlignment: pw.MainAxisAlignment.center,
+            children: [
+              pw.Text("Visitor history",
+                  style: pw.TextStyle(
+                      fontSize: 20.0, fontWeight: pw.FontWeight.bold)),
+              pw.Padding(padding: pw.EdgeInsets.all(8)),
+              pw.Text("Created ${DateTime.now()}"),
+              pw.Divider(color: PdfColor(1, 1, 1), height: 10.0),
+              pw.Center(
+                  child: pw.Text("This file contains personal information!",
+                      style: pw.TextStyle(
+                          fontSize: 16.0, fontWeight: pw.FontWeight.bold))),
+              pw.Center(
+                  child: pw.Text(
+                      "Don't share this document with non Gov. third parties",
+                      style: pw.TextStyle(
+                          fontSize: 16.0, fontWeight: pw.FontWeight.bold))),
+              pw.Divider(color: PdfColor.fromRYB(0, 0, 0)),
+              pw.Text("This file has been generated with: Castro")
+            ]);
+      },
+    );
+    //Adds inital page data
+    document.addPage(initalPageData);
+
+    ///These three loops iterate through the data structure
+    for (var tablename in data.keys) {
+      for (var table in data[tablename].keys) {
+        Map currentData = data[tablename][table];
+        document.addPage(pw.Page(
+          pageFormat: PdfPageFormat.a4,
+          build: (context) {
+            return pw.Center(child:pw.Column(
+              mainAxisAlignment: pw.MainAxisAlignment.center,
+              children: [
+              pw.Text(
+                tablename.replaceAll("n-", "Table number: "),
+                style: pw.TextStyle(
+                    fontWeight: pw.FontWeight.bold, fontSize: 16.0),
+              ),
+              pw.Divider(color: PdfColor(1, 1, 1)),
+              pw.Text("Arrived at:${currentData["arrived"]}",
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+              pw.Padding(padding: pw.EdgeInsets.all(8)),
+              pw.Text("Left at: ${currentData["gone"] ?? ""}",
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+              pw.Padding(padding: pw.EdgeInsets.all(8)),
+              pw.Text("Name: ${currentData["name"]}",
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+              pw.Padding(padding: pw.EdgeInsets.all(8)),
+              pw.Text("Phone: ${currentData["phone"] ?? ""}"),
+              pw.Padding(padding: pw.EdgeInsets.all(8)),
+              pw.Text("E-Mail: ${currentData["email"] ?? ""}"),
+              pw.Padding(padding: pw.EdgeInsets.all(8)),
+              pw.Text("Address: ${currentData["address"] ?? ""}"),
+              pw.Padding(padding: pw.EdgeInsets.all(8)),
+            ]));
+          },
+        ));
+      }
+    }
+    Uint8List pdf = document.save();
+    //saves file
+    file.writeAsBytesSync(pdf);
+    // Share dialog to share file
+    await ShareExtend.share(tempDir.path + "/${_name}_visitordata.pdf", "file",
+        subject: "$_name Visitor history");
   }
 }

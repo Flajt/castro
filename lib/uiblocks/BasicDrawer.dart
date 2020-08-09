@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:share_extend/share_extend.dart';
 
 class UserDrawerStorage extends StatelessWidget {
   const UserDrawerStorage({Key key}) : super(key: key);
@@ -70,13 +71,15 @@ class ShopDrawerStorage extends StatelessWidget {
           Divider(),
           ListTile(
             leading: Icon(Icons.file_download,color: Colors.black,),
-            title: Text("Download visitor history"),
-            onTap: (){},
+            title: Text("Get visitor history"),
+            onTap: ()async {
+              ShopLogic.downloadVisitorData();
+            },
           ),
           Divider(color: Colors.black38),
           ListTile(
             leading: Icon(FontAwesomeIcons.qrcode,color: Colors.black,),
-            title: Text("Download QR-Codes"),
+            title: Text("Get QR-Codes"),
             onTap: ()async{
               var ret = await ShopLogic.downloadQrCodes();
             },
