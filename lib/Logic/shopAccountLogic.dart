@@ -127,6 +127,7 @@ class ShopAccoutLogic {
     String address;
     Map openingtimes;
     String phone;
+    List tags;
     FirebaseDatabase dbinstance = FirebaseDatabase.instance;
     Map<String, dynamic> data = await getShopCreds(); //calls to get user creds
     FirebaseUser user = data["user"];
@@ -152,6 +153,11 @@ class ShopAccoutLogic {
         phone = values["phone"];
       } else {
         phone = "";
+      } if(values.containsKey("tags")){
+         tags = values["tags"];
+      }
+      else{
+        tags = []; 
       }
     } else {
       address = null;
@@ -160,7 +166,7 @@ class ShopAccoutLogic {
       data["phone"] = phone; //adds users phone number and adress
       data["address"] = address;
       data["openingtimes"] = openingtimes;
-      data["tags"] = values["tags"] ?? "";
+      data["tags"] = tags;
       return data;
     } else {
       return null;

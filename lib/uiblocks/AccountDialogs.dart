@@ -204,6 +204,8 @@ class _OpenIngTimePickerState extends State<OpenIngTimePicker> {
       actions: [FlatButton(onPressed: ()=>Navigator.of(context).pop(), child: Text("Cancel")),RaisedButton(child: Text("Submit"),onPressed: 
       (){
         ShopAccoutLogic.editOpeningTimes(openingTimes);
+        Navigator.of(context).pop();
+
       }
       )],
         title: Center(
@@ -222,10 +224,7 @@ class _OpenIngTimePickerState extends State<OpenIngTimePicker> {
                   return TimePickerExpansionTile(
                     title: days[index].toString(),
                     onSubmitted: (ohour,ominute,chour,cminute){
-                      print(ohour);
-                      print(openingTimes);
                       openingTimes[days[index]].add("${ohour??0}:${ominute??0}-${chour??0}:${cminute??0}");
-                      print(openingTimes);
                     },
                   );
                 })));
