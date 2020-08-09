@@ -2,7 +2,6 @@
 
 # Notice: 
 This Code is not for shareing, editing, copying or implementing in other projects.
-It's just 
 
 A Corona time resturant App.
 ## Overview 
