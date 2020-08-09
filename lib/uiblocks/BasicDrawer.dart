@@ -22,10 +22,13 @@ class UserDrawerStorage extends StatelessWidget {
             title: Text("Account"),
           ),
           Divider(color: Colors.black38),
-          ListTile(
-            leading: Icon(Icons.favorite,color: Colors.black,),
-            onTap: () {},
-            title: Text("Favorite resturants"),
+          AbsorbPointer(
+                      child: ListTile(
+              leading: Icon(Icons.favorite,color: Colors.black,),
+              onTap: () {},
+              title: Text("Favorite resturants"),
+              subtitle: Text("Comming soon...."),
+            ),
           ),
           Divider(color: Colors.black38),
           ListTile(

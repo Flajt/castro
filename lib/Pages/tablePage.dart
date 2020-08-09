@@ -31,7 +31,8 @@ class _TablePageState extends State<TablePage> {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.of(context).pushNamed("/user/menu",arguments: {"shopid":id});
+              Navigator.of(context)
+                  .pushNamed("/user/menu", arguments: {"shopid": id});
             }),
       ],
       requireAppbar: true,
@@ -52,17 +53,34 @@ class _TablePageState extends State<TablePage> {
               child: RaisedButton(
                   onPressed: () {
                     UserShopOptions.leaveTable(tableNum, id, key);
-                    showDialog(context: context,child:AlertDialog(
-                      actions: [RaisedButton(color: Colors.orange,onPressed: ()=>Navigator.of(context).pop(), child: Text("Good bye!"))],
-                      title: Center(child:Text("Thank you for your visit",style: TextStyle(fontWeight: FontWeight.bold),)),
-                      content: Container(
-                        height: size.height *0.45,
-                        child: Column(children:[
-                          SvgPicture.asset("assets/leaving.svg",width: size.width*0.4,height: size.height*0.4,),
-                          Text("We were happy to serve you!",style: TextStyle(fontWeight: FontWeight.bold))
-                        ]),
-                      ),
-                    ));
+                    showDialog(
+                        context: context,
+                        child: AlertDialog(
+                          actions: [
+                            RaisedButton(
+                                color: Colors.orange,
+                                onPressed: () => Navigator.of(context)
+                                    .popAndPushNamed("/user"),
+                                child: Text("Good bye!"))
+                          ],
+                          title: Center(
+                              child: Text(
+                            "Thank you for your visit",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          )),
+                          content: Container(
+                            height: size.height * 0.45,
+                            child: Column(children: [
+                              SvgPicture.asset(
+                                "assets/leaving.svg",
+                                width: size.width * 0.4,
+                                height: size.height * 0.4,
+                              ),
+                              Text("We were happy to serve you!",
+                                  style: TextStyle(fontWeight: FontWeight.bold))
+                            ]),
+                          ),
+                        ));
                   },
                   color: Colors.orange,
                   child: Text("Leaving")))
@@ -71,6 +89,7 @@ class _TablePageState extends State<TablePage> {
     );
   }
 }
+
 ///Displays the Menu
 class MenuPage extends StatefulWidget {
   MenuPage({Key key}) : super(key: key);
@@ -96,8 +115,11 @@ class _MenuPageState extends State<MenuPage> {
                   height: size.height,
                   width: size.width,
                 );
-              }else{
-                return Center(child: CircularProgressIndicator(backgroundColor:Colors.orange),);
+              } else {
+                return Center(
+                  child:
+                      CircularProgressIndicator(backgroundColor: Colors.orange),
+                );
               }
             }));
   }

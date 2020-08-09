@@ -1,8 +1,10 @@
 import 'package:barcode_scan/model/scan_result.dart';
 import 'package:barcode_scan/platform_wrapper.dart';
+import 'package:castro/Logic/resturant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:pdf/widgets.dart';
 
 ///Manges the optins a user has regarding shops like, claming tables, bookings a.s.o
@@ -16,7 +18,7 @@ class UserShopOptions {
     String content = scanner.rawContent.replaceAll('"', "");
     List<String> split = content.split("-");
     FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
-    
+
     DataSnapshot _ref = await FirebaseDatabase.instance
         .reference()
         .child("/users/${currentUser.uid}/address")
@@ -24,31 +26,41 @@ class UserShopOptions {
     String address = _ref.value;
     String _resturantid = split[0];
     String tablenNumber = split[1];
-    DataSnapshot _data = await FirebaseDatabase.instance.reference().child("/shops/$_resturantid").once();
+    DataSnapshot _data = await FirebaseDatabase.instance
+        .reference()
+        .child("/shops/$_resturantid")
+        .once();
     String name = _data.value["name"];
     print(name);
     DatabaseReference ref = FirebaseDatabase.instance
         .reference()
         .child("/shops/$_resturantid/info/n-$tablenNumber");
     DateTime now = DateTime.now();
-    DatabaseReference pushref =  ref.push()..set({
-      "arrived" : now.toIso8601String(),
-      "gone" : null,
-      "name" : currentUser.displayName,
-      "phone" : currentUser.phoneNumber??"",
-      "address" : address??"",
-      "email" : currentUser.email,
-    });
+    DatabaseReference pushref = ref.push()
+      ..set({
+        "arrived": now.toIso8601String(),
+        "gone": null,
+        "name": currentUser.displayName,
+        "phone": currentUser.phoneNumber ?? "",
+        "address": address ?? "",
+        "email": currentUser.email,
+      });
     String key = pushref.key;
-    DataSnapshot ret = await FirebaseDatabase.instance.reference().child("/shops/$_resturantid").once();
-    return [_resturantid, tablenNumber,name,key];
+    DataSnapshot ret = await FirebaseDatabase.instance
+        .reference()
+        .child("/shops/$_resturantid")
+        .once();
+    return [_resturantid, tablenNumber, name, key];
     //TODO: Mark table as blocked
     //Save user information with table and data in Databases
   }
+
   ///Will be called if you leave a table
-  static Future<void>leaveTable(String tableNum,String shopId,String uid){
-    DatabaseReference ref =  FirebaseDatabase.instance.reference();
-    ref.child("/shops/$shopId/info/n-$tableNum/$uid").update({"gone":DateTime.now().toIso8601String()});
+  static Future<void> leaveTable(String tableNum, String shopId, String uid) {
+    DatabaseReference ref = FirebaseDatabase.instance.reference();
+    ref
+        .child("/shops/$shopId/info/n-$tableNum/$uid")
+        .update({"gone": DateTime.now().toIso8601String()});
   }
 
   ///Allows to book a table for [personCuount] persons at [dateTime]
@@ -56,10 +68,30 @@ class UserShopOptions {
       String tableid, int personCount, DateTime dateTime) {
     //TODO: Implement
   }
-  ///Get's the link for the menu
-  static Future<String> getMenu(String shopid)async{
-    return await FirebaseStorage.instance.ref().child("$shopid").getDownloadURL();
 
+  ///Get's the link for the menu
+  static Future<String> getMenu(String shopid) async {
+    return await FirebaseStorage.instance
+        .ref()
+        .child("$shopid")
+        .getDownloadURL();
   }
 
+  ///Querrys all resturants for the search field, and stores their selected properties in the [Resturant] class
+  static Future getResturants() async {
+    List<Resturant> resturants = [];
+    DataSnapshot snapshot =
+        await FirebaseDatabase.instance.reference().child("/shops/").once();
+    Map data = snapshot.value;
+    for (var key in data.keys) {
+      resturants.add(Resturant(
+          name: data[key]["name"],
+          address: data[key]["address"],
+          tags: data[key]["tags"],
+          key: key??"",
+          openingTimes: data[key]["openingtimes"]??{},
+          phone: data[key]["phone"]??""));
+      return resturants;
+    }
+  }
 }
