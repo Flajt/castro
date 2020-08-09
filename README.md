@@ -58,3 +58,4 @@ samples, guidance on mobile development, and a full API reference.
 - Adding a phone number works only with a real number for verification, my current device (Samsung S6) doesn't need a manual code to be entered, so no solution for manul entering is currently given. If problem arise please contacte me, and I will try to sort them out asasp
 - there could be some bugs on the way, I tried my best to remove them but it's still an early project,
 - if you run this project via VS-Code, disbale all debugging features or the application will stop sometimes, to fix that just press on the play button on the pop up menu
+- it's also recommended to upload a menu file (the file in the video was just a place holder) and to fill in all opening dates (if you create a resturant) due to possible issues if they are not created

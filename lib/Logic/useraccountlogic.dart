@@ -52,6 +52,7 @@ class UserAccount {
 
       ///and type of user
       await prefs.setString("type", userType);
+      currentUser.reload();
     }
   }
 

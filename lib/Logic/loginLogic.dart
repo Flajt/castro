@@ -10,8 +10,11 @@ class LoginLogic {
     try {
       ///TODO: If you sign in as shop but with userdata you will be redirected to shop page, but cant do something, display error, add forgot password option
       //Note you need to remove the blank space from your input or else it won't work
-      await FirebaseAuth.instance
+      //TODO: Maybe use get the current User and reload it before leaving this function
+      AuthResult ret = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
+      FirebaseUser user = ret.user;
+      await user.reload();
       await prefs.setString("email", "$email");
       await prefs.setString("type", "$type");
       return true;

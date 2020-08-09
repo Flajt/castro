@@ -94,7 +94,7 @@ class _ShopHomeScreenState extends State<ShopHomeScreen> {
             }else if (snapshot.hasError){
               return AlertDialog(
                 title: Title(color: Colors.red[600], child: Text("An error has occured")),
-                content: Text(snapshot.error),
+                content: Text(snapshot.error.toString()),
               );
             }
           }),
