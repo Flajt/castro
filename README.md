@@ -27,13 +27,28 @@ A Corona time resturant App.
  - reviews?
  - (recommendations)
  - ads (not aggressiv) and donations to finance backend
- - have a look at the menue before you arrive 
+ - have a look at the menue before you arrive
+ - IOS support
+ - Appstore and Play Store launch
  - **and much more**
  
 Info about Flutter to be found here:
 - [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
 - [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Install instuctions:
+1. install Flutter by following the official website install instructions
+2. Install the VS-Code [Flutter](https://marketplace.visualstudio.com/items?itemName=Dart-Code.flutter) and [dart plugin](https://marketplace.visualstudio.com/items?itemName=Dart-Code.dart-code)
+3. Open the project
+4. Open the VS-Code debug tab
+5. Plug an *Android* OS supporting phone into you computer  
+6. Press the Start Debugging button, you might need to select flutter from the drop down menu netxt to it
+7. You phone should be selected as install medium and the app will boot there
+
+## Alernative install app:
+1. Navigate to the project folder
+2. Open the terminal and type : _flutter run_
+3. This should build the apk and deliver it to your phone so you can use the App (provided you plugged your phone in beforehand!)
