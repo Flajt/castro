@@ -20,11 +20,11 @@ class ShopAccoutLogic {
       FirebaseUser currentUser = result.user;
       UserUpdateInfo info = UserUpdateInfo();
       info.displayName = shopname;
-      String uid = currentUser.uid;
-      FirebaseDatabase.instance
+      /*String uid = currentUser.uid; //Doesn't work for whatever reason
+      await FirebaseDatabase.instance
           .reference()
-          .child("/shops/$uid")
-          .set({"name": currentUser.displayName});
+          .child("/shops/$uid/")
+          .update({"name": currentUser.displayName});*/
 
       await currentUser.updateProfile(info);
     }
@@ -106,6 +106,9 @@ class ShopAccoutLogic {
   ///Updates the name of the shop
   static Future<void> editName(String newShopname) async {
     FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
+    String uid = currentUser.uid;
+    DatabaseReference ref = FirebaseDatabase.instance.reference().child("/shops/$uid");
+    await ref.update({"name":newShopname});
     UserUpdateInfo info = UserUpdateInfo();
     info.displayName = newShopname;
     await currentUser.updateProfile(info);
@@ -187,7 +190,7 @@ class ShopAccoutLogic {
     DatabaseReference reference = FirebaseDatabase.instance.reference();
     reference
         .child("/shops/${currentUser.uid}")
-        .update({"address": address});
+        .update({"address": address,"name":currentUser.displayName});
   }
 
   ///Updates opening times of the shop

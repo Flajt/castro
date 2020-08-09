@@ -81,15 +81,16 @@ class UserShopOptions {
     DataSnapshot snapshot =
         await FirebaseDatabase.instance.reference().child("/shops/").once();
     Map data = snapshot.value;
+    print(data.keys);
     for (var key in data.keys) {
       resturants.add(Resturant(
-          name: data[key]["name"],
-          address: data[key]["address"],
-          tags: data[key]["tags"],
-          key: key??"",
-          openingTimes: data[key]["openingtimes"]??{},
-          phone: data[key]["phone"]??""));
-      return resturants;
+          name: data[key]["name"] ?? "",
+          address: data[key]["address"] ?? "",
+          tags: data[key]["tags"] ?? [],
+          key: key ?? "",
+          openingTimes: data[key]["openingtimes"] ?? {},
+          phone: data[key]["phone"] ?? ""));
     }
+    return resturants;
   }
 }

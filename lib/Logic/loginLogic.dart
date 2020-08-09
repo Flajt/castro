@@ -17,6 +17,7 @@ class LoginLogic {
       await user.reload();
       await prefs.setString("email", "$email");
       await prefs.setString("type", "$type");
+      await prefs.setString("name", "${user.displayName}");
       return true;
     } catch (e) {
       return false;
