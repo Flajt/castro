@@ -170,8 +170,7 @@ class _SearchInterFaceState extends State<SearchInterFace> {
                                                       days.sort();*/
                                                   String day = _days[index];
                                                   //Creates opening times and removes brackets for cleaner look
-                                                  String openingTime = resturant
-                                                      .openingTimes[day]??""
+                                                  String openingTime = resturant.openingTimes[day]
                                                       .toString()
                                                       .replaceAll("[", "")
                                                       .replaceAll("]", "");

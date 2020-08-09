@@ -12,20 +12,24 @@ class UserAccount {
   static Future accountCompleted() async {
     bool stepOne;
     FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
-    DatabaseReference reference = FirebaseDatabase.instance.reference(); //creates db reference
-    DataSnapshot data = await reference.child("/users/${currentUser.uid}").once();//grabs the db once
-    if(data.value!=null){
-    stepOne = data.value.containsKey("address"); //checks if the address entry exists
-    if (stepOne) {
-      if (currentUser.phoneNumber.isNotEmpty &&
-          currentUser.phoneNumber != null) {
-        return true;
+    DatabaseReference reference =
+        FirebaseDatabase.instance.reference(); //creates db reference
+    DataSnapshot data = await reference
+        .child("/users/${currentUser.uid}")
+        .once(); //grabs the db once
+    if (data.value != null) {
+      stepOne = data.value
+          .containsKey("address"); //checks if the address entry exists
+      if (stepOne) {
+        if (currentUser.phoneNumber!=null) {
+          return true;
+        } else {
+          return false;
+        }
       } else {
         return false;
       }
-    } else {
-      return false;
-    }}
+    }
   }
 
   ///Signs the user in
@@ -115,7 +119,8 @@ class UserAccount {
   }
 
   ///Updates the users current email adress
-  static Future<void> updateEmail(FirebaseUser currentUser, String email) async {
+  static Future<void> updateEmail(
+      FirebaseUser currentUser, String email) async {
     await currentUser.updateEmail(email);
   }
 
