@@ -61,3 +61,5 @@ samples, guidance on mobile development, and a full API reference.
 - it's also recommended to upload a menu file (the file in the video was just a place holder) and to fill in all opening dates (if you create a resturant) due to possible issues if they are not created
 - I apologize for possible spellig mistakes
 - If the search field doens't refresh even after restarting the app, consider a phone reboot
+
+If any issues arrive please let me know.
