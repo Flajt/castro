@@ -3,10 +3,9 @@
 # Notice: 
 This Code is not for shareing, editing, copying or implementing in other projects.
 
-A Corona time resturant App.
 ## Overview 
+A Corona time resturant App.
 
-This project is a starting point for a Flutter application.
 # Current Features:
  - Display your Resturant
  - go and find resturants
